@@ -1,7 +1,14 @@
 <template>
   <div>
-    <p>Products</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+      <div v-for="product in products">
+        <ProductCard :product="product" />
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+//  fetch the products
+const { data: products } = await useFetch("https://fakestoreapi.com/products")
+</script>
