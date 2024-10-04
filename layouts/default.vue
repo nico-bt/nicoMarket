@@ -1,6 +1,7 @@
 <template>
+  <NuxtLoadingIndicator />
   <div>
-    <header class="shadow-sm bg-white">
+    <header class="shadow-sm bg-white sticky top-0">
       <nav class="container mx-auto p-4 flex justify-between">
         <NuxtLink to="/" class="font-bold">Market</NuxtLink>
         <ul class="flex gap-4">
