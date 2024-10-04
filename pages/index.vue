@@ -4,8 +4,19 @@
   </div>
 </template>
 
-<script>
-export default {}
+<script setup>
+useSeoMeta({
+  title: "NicoMarket",
+  description: "Search products & offers!",
+  ogTitle: "NicoMarket",
+  ogDescription: "Search products & offers!",
+  ogImage: "/screen-img.jpg",
+  ogUrl: `http:localhost:3000`,
+  twitterTitle: "NicoMarket",
+  twitterDescription: "Search products & offers!",
+  twitterImage: "/screen-img.jpg",
+  twitterCard: "summary",
+})
 </script>
 
 <style scoped>
