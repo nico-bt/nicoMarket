@@ -1,16 +1,7 @@
 <template>
   <NuxtLoadingIndicator />
   <div>
-    <header class="shadow-sm bg-white sticky top-0">
-      <nav class="container mx-auto p-4 flex justify-between">
-        <NuxtLink to="/" class="font-bold">Market</NuxtLink>
-        <ul class="flex gap-4">
-          <li><NuxtLink to="/">Home</NuxtLink></li>
-          <li><NuxtLink to="/about">About</NuxtLink></li>
-          <li><NuxtLink to="/products">Products</NuxtLink></li>
-        </ul>
-      </nav>
-    </header>
+    <Navbar />
 
     <!-- Output page content -->
     <div class="container mx-auto p-4">
@@ -18,11 +9,3 @@
     </div>
   </div>
 </template>
-
-<style scoped>
-.router-link-exact-active {
-  color: #12b488;
-  font-weight: bold;
-  border-bottom: 3px solid #12b488;
-}
-</style>
