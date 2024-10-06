@@ -1,15 +1,16 @@
 <template>
   <div class="card">
-    <span
+    <div
       @click="() => router.back()"
-      class="text-gray-600 text-4xl cursor-pointer rounded-full pb-1 flex justify-center items-center w-[50px] h-[50px] hover:text-black hover:bg-slate-100"
+      class="flex flex-col text-gray-600 cursor-pointer rounded-full justify-center items-center w-[65px] h-[65px] pb-1 hover:text-black hover:bg-slate-100"
     >
-      ←
-    </span>
+      <span class="text-4xl"> ← </span>
+      <span class="text-[12px]">back</span>
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
       <div class="p-7">
-        <img :src="`${product.image}`" class="mx-auto my-7" />
+        <NuxtImg :src="`${product.image}`" class="mx-auto my-7" />
       </div>
       <div class="p-7">
         <h2 class="text-4xl my-7">{{ product.title }}</h2>

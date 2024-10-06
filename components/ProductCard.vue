@@ -1,6 +1,6 @@
 <template>
   <div class="card text-center">
-    <img :src="`${product.image}`" class="thumb" />
+    <NuxtImg :src="`${product.image}`" class="thumb" />
     <p class="font-bold text-gray-800 m-4 truncate">{{ product.title }}</p>
     <p class="font-bold text-gray-600 m-4 truncate">$ {{ product.price.toLocaleString() }}</p>
     <p class="font-bold text-gray-500 m-4 truncate">{{ product.source }}</p>
