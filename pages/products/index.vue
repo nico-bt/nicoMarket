@@ -22,15 +22,15 @@
       v-if="status === 'success' && data?.products.length"
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"
     >
-      <Pagination :currentPage="page" :totalPages="totalPages" @pageChange="handlePageChange" />
+      <Pagination :paging="data.paging" />
 
-      <SortSelect :sortBy="sortBy" @sortChange="handleSortChange" />
+      <SortSelect />
 
       <div v-for="product in data?.products" :key="product.id">
         <ProductCard :product="product" />
       </div>
 
-      <Pagination :currentPage="page" :totalPages="totalPages" @pageChange="handlePageChange" />
+      <Pagination :paging="data.paging" />
     </div>
   </div>
 </template>
@@ -41,41 +41,17 @@ const router = useRouter()
 
 const query = ref(route.query.q || "")
 
-const page = ref(Number(route.query.page) || 1)
-const LIMIT = 50
-const totalPages = computed(() => Math.ceil((data.value?.paging.primary_results || 1) / LIMIT))
-
-const sortBy = ref(route.query.sort || "relevance")
-
 const handleQuery = async () => {
-  page.value = 1
   if (query.value.trim()) {
-    router.push({ query: { q: query.value, page: 1, sort: sortBy.value } })
+    router.push({ query: { q: query.value, page: 1, sort: route.query.sort || "relevance" } })
   }
-}
-
-const handlePageChange = (newPage) => {
-  page.value = newPage
-  router.push({
-    query: { ...route.query, page: newPage },
-  })
-}
-
-const handleSortChange = (newSort) => {
-  sortBy.value = newSort
-  page.value = 1
-  router.push({
-    query: {
-      ...route.query,
-      sort: newSort,
-      page: 1,
-    },
-  })
 }
 
 const url = computed(() =>
   route.query.q
-    ? `/api/products?query=${route.query.q}&page=${page.value}&sort=${sortBy.value}`
+    ? `/api/products?query=${route.query.q}&page=${route.query.page || 1}&sort=${
+        route.query.sort || "relevance"
+      }`
     : null
 )
 

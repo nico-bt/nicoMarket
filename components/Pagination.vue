@@ -1,17 +1,17 @@
 <template>
   <div class="pagination">
     <button
-      v-if="currentPage > 1"
+      v-if="page > 1"
       @click="goToPreviousPage"
       class="px-2 mx-2 py-0.5 bg-gray-300 text-gray-700 rounded border border-slate-400 text-sm"
     >
       Previous
     </button>
 
-    <span class="text-xl">Page {{ currentPage }} of {{ totalPages }}</span>
+    <span class="text-xl">Page {{ page }} of {{ totalPages }}</span>
 
     <button
-      v-if="currentPage < totalPages"
+      v-if="page < totalPages"
       @click="goToNextPage"
       class="px-2 mx-2 py-0.5 bg-gray-300 text-gray-700 rounded border border-slate-400 text-sm"
     >
@@ -22,28 +22,28 @@
 
 <script setup>
 const props = defineProps({
-  currentPage: {
-    type: Number,
-    required: true,
-  },
-  totalPages: {
-    type: Number,
+  paging: {
+    type: Object,
     required: true,
   },
 })
+const route = useRoute()
 
-// Emit event to notify the parent about page change
-const emit = defineEmits(["pageChange"])
+const page = ref(Number(route.query.page) || 1)
+const LIMIT = 50
+const totalPages = computed(() => Math.ceil((props.paging?.primary_results || 1) / LIMIT))
 
 const goToPreviousPage = () => {
-  if (props.currentPage > 1) {
-    emit("pageChange", props.currentPage - 1)
+  if (page.value > 1) {
+    page.value = page.value - 1
+    navigateTo(`/products/?q=${route.query.q}&page=${page.value}&sort=${route.query.sort}`)
   }
 }
 
 const goToNextPage = () => {
-  if (props.currentPage < props.totalPages) {
-    emit("pageChange", props.currentPage + 1)
+  if (page.value < totalPages.value) {
+    page.value = page.value + 1
+    navigateTo(`/products/?q=${route.query.q}&page=${page.value}&sort=${route.query.sort}`)
   }
 }
 </script>

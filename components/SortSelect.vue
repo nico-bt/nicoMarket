@@ -3,7 +3,7 @@
     <label id="sort" class="font-mono text-gray-800">Sort by:</label>
     <select
       id="sort"
-      :value="sortBy"
+      v-model="sortBy"
       @change="handleChangeSort"
       class="rounded p-1 font-mono text-gray-800"
     >
@@ -15,13 +15,10 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  sortBy: String,
-})
+const route = useRoute()
+const sortBy = ref(route.query.sort || "relevance")
 
-const emit = defineEmits(["sortChange"])
-
-const handleChangeSort = (event) => {
-  emit("sortChange", event.target.value)
+const handleChangeSort = () => {
+  navigateTo(`/products/?q=${route.query.q}&page=1&sort=${sortBy.value}`)
 }
 </script>
