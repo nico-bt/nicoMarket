@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form v-on:submit.prevent="handleQuery" class="flex gap-2 max-w-[500px] mb-6 mx-auto">
+    <form v-on:submit.prevent="handleQuery" class="flex gap-2 max-w-[500px] mb-4 mx-auto">
       <input
         v-model="query"
         type="text"
@@ -16,35 +16,19 @@
       </button>
     </form>
 
-    <div
-      v-if="status === 'pending' && url"
-      class="text-2xl tracking-widest flex max-w-32 mx-auto mt-32"
-    >
-      Loading...
-    </div>
+    <StatusMessage :status="status" :error="error" :data="data" :url="url" />
 
     <div
-      v-if="status === 'error' && url"
-      class="text-2xl tracking-wide max-w-[350px] mx-auto mt-32"
+      v-if="status === 'success' && data?.products.length"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"
     >
-      <p class="mb-4">Ups, something went wrong. Please try again</p>
-      <p>{{ error.statusMessage }}</p>
-    </div>
+      <Pagination :currentPage="page" :totalPages="totalPages" @pageChange="handlePageChange" />
 
-    <div
-      v-if="status === 'success' && data?.products.length === 0"
-      class="text-2xl tracking-widest flex max-w-60 mx-auto mt-32"
-    >
-      No results
-    </div>
-
-    <div
-      v-if="status === 'success' && data?.products"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5"
-    >
       <div v-for="product in data?.products" :key="product.id">
         <ProductCard :product="product" />
       </div>
+
+      <Pagination :currentPage="page" :totalPages="totalPages" @pageChange="handlePageChange" />
     </div>
   </div>
 </template>
@@ -55,13 +39,30 @@ const router = useRouter()
 
 const query = ref(route.query.q || "")
 
+const page = ref(Number(route.query.page) || 1)
+const LIMIT = 50
+const totalPages = computed(() => Math.ceil((data.value?.paging.primary_results || 1) / LIMIT))
+
 const handleQuery = async () => {
+  page.value = 1
   if (query.value.trim()) {
     router.push({ query: { q: query.value } })
   }
 }
 
-const url = computed(() => (route.query.q ? `/api/products?query=${route.query.q}` : null))
+const handlePageChange = (newPage) => {
+  page.value = newPage
+  router.push({
+    query: {
+      q: query.value,
+      page: newPage,
+    },
+  })
+}
+
+const url = computed(() =>
+  route.query.q ? `/api/products?query=${route.query.q}&page=${page.value}` : null
+)
 
 const { data, error, status } = await useFetch(url, { watch: [url] })
 

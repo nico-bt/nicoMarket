@@ -7,8 +7,18 @@ export interface NormalizedProduct {
   source: "MercadoLibre" | "Amazon"
 }
 
-export default defineEventHandler(async (event) => {
-  const { query } = getQuery(event)
+export interface apiResponse {
+  products: NormalizedProduct[]
+  paging: {
+    total: number
+    primary_results: number
+    offset: number
+    limit: number
+  }
+}
+
+export default defineEventHandler(async (event): Promise<apiResponse> => {
+  const { query, page = 1 } = getQuery(event)
 
   if (!query) {
     throw createError({
@@ -17,8 +27,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const limit = 50
+  const offset = (Number(page) - 1) * limit
+
   try {
-    const data = await $fetch<any>(`https://api.mercadolibre.com/sites/MLA/search?q=${query}`)
+    const data = await $fetch<any>(
+      `https://api.mercadolibre.com/sites/MLA/search?q=${query}&offset=${offset}&limit=${limit}`
+    )
 
     // Normalize data
     const productsMercadoLibre: NormalizedProduct[] = data.results.map((product: any) => {
@@ -34,6 +49,7 @@ export default defineEventHandler(async (event) => {
 
     return {
       products: productsMercadoLibre,
+      paging: data.paging,
     }
   } catch (error) {
     throw createError({
