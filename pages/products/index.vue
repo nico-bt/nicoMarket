@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex gap-2 max-w-[500px] mb-6 mx-auto">
+    <form v-on:submit.prevent="handleQuery" class="flex gap-2 max-w-[500px] mb-6 mx-auto">
       <input
         v-model="query"
         type="text"
@@ -8,13 +8,13 @@
         class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-700 focus:border-green-700 transition duration-300"
       />
       <button
-        @click="handleQuery"
+        type="submit"
         class="px-6 py-2 bg-green-700 text-white font-semibold tracking-wider rounded-lg shadow-md hover:bg-green-800 transition duration-300 disabled:opacity-60"
         :disabled="status === 'pending'"
       >
         {{ status === "pending" ? "..." : "Search" }}
       </button>
-    </div>
+    </form>
 
     <div
       v-if="status === 'pending' && url"
