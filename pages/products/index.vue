@@ -24,6 +24,8 @@
     >
       <Pagination :currentPage="page" :totalPages="totalPages" @pageChange="handlePageChange" />
 
+      <SortSelect :sortBy="sortBy" @sortChange="handleSortChange" />
+
       <div v-for="product in data?.products" :key="product.id">
         <ProductCard :product="product" />
       </div>
@@ -43,28 +45,41 @@ const page = ref(Number(route.query.page) || 1)
 const LIMIT = 50
 const totalPages = computed(() => Math.ceil((data.value?.paging.primary_results || 1) / LIMIT))
 
+const sortBy = ref(route.query.sort || "relevance")
+
 const handleQuery = async () => {
   page.value = 1
   if (query.value.trim()) {
-    router.push({ query: { q: query.value } })
+    router.push({ query: { q: query.value, page: 1, sort: sortBy.value } })
   }
 }
 
 const handlePageChange = (newPage) => {
   page.value = newPage
   router.push({
+    query: { ...route.query, page: newPage },
+  })
+}
+
+const handleSortChange = (newSort) => {
+  sortBy.value = newSort
+  page.value = 1
+  router.push({
     query: {
-      q: query.value,
-      page: newPage,
+      ...route.query,
+      sort: newSort,
+      page: 1,
     },
   })
 }
 
 const url = computed(() =>
-  route.query.q ? `/api/products?query=${route.query.q}&page=${page.value}` : null
+  route.query.q
+    ? `/api/products?query=${route.query.q}&page=${page.value}&sort=${sortBy.value}`
+    : null
 )
 
-const { data, error, status } = await useFetch(url, { watch: [url] })
+const { data, error, status } = await useFetch(url, { watch: [url], cache: "force-cache" })
 
 useSeoMeta({
   title: () => route.query.q || "Search products",

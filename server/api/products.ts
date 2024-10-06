@@ -18,7 +18,7 @@ export interface apiResponse {
 }
 
 export default defineEventHandler(async (event): Promise<apiResponse> => {
-  const { query, page = 1 } = getQuery(event)
+  let { query, page = 1, sort = "relevance" } = getQuery(event)
 
   if (!query) {
     throw createError({
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event): Promise<apiResponse> => {
 
   try {
     const data = await $fetch<any>(
-      `https://api.mercadolibre.com/sites/MLA/search?q=${query}&offset=${offset}&limit=${limit}`
+      `https://api.mercadolibre.com/sites/MLA/search?q=${query}&offset=${offset}&limit=${limit}&sort=${sort}`
     )
 
     // Normalize data
