@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss", "@nuxt/image"],
+  image: {
+    provider: "netlify",
+    domains: ["https://http2.mlstatic.com"],
+  },
   app: {
     head: {
       title: "NicoMarket",
