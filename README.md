@@ -11,3 +11,5 @@ Features:
 - Pagination
 - SSR
 - SEO: Add dynamic meta tags
+
+🔗 Live: https://strong-bubblegum-f74657.netlify.app/
